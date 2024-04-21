@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:onboard_animation/modals.dart';
+import 'package:onboard_animation/dummy_data.dart';
 
 UserProfile _userProfile = UserProfile();
 
@@ -118,6 +119,17 @@ class ReportsScreen extends StatefulWidget {
 }
 
 class _ReportsScreenState extends State<ReportsScreen> {
+  List<Reports> doctorReports = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Filter reports associated with the current doctor
+    doctorReports = reports
+        .where((report) => report.rDoctorName == widget.currentDoctor.name)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,7 +137,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         title: Text('Reports'),
       ),
       body: ListView.builder(
-        itemCount: 5, // Assuming you have 5 patient reports
+        itemCount: doctorReports.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -140,8 +152,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   Container(
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color:
-                          Colors.blueAccent, // Change to your preferred color
+                      color: Colors.blueAccent,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(16),
                         topRight: Radius.circular(16),
@@ -155,7 +166,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          'John Doe', // Replace with dynamic data
+                          doctorReports[index].name, // Use report's name
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -171,19 +182,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Age: 30', // Replace with dynamic data
+                          'Age: ${doctorReports[index].age}', // Use report's age
                         ),
                         SizedBox(height: 8),
                         Text(
-                          'Blood Group: O+', // Replace with dynamic data
+                          'Blood Group: ${doctorReports[index].rBloodGrp}', // Use report's blood group
                         ),
                         SizedBox(height: 8),
                         Text(
-                          'Complications: None', // Replace with dynamic data
+                          'Complications: ${doctorReports[index].complications}', // Use report's complications
                         ),
                         SizedBox(height: 8),
                         Text(
-                          'Remarks: Regular checkup', // Replace with dynamic data
+                          'Remarks: ${doctorReports[index].remarks}', // Use report's remarks
                         ),
                       ],
                     ),
@@ -208,22 +219,17 @@ class AppointmentsScreen extends StatefulWidget {
 }
 
 class _AppointmentsScreenState extends State<AppointmentsScreen> {
-  // Dummy appointment data
-  List<Map<String, String>> appointments = [
-    {
-      'date': '2024-04-20',
-      'time': '09:00 AM',
-      'doctor': 'Dr. Smith',
-      'reason': 'General Checkup',
-    },
-    {
-      'date': '2024-05-15',
-      'time': '02:30 PM',
-      'doctor': 'Dr. Johnson',
-      'reason': 'Dental Checkup',
-    },
-    // Add more appointments as needed
-  ];
+  late List<Apppointments> doctorAppointments;
+
+  @override
+  void initState() {
+    super.initState();
+    // Filter appointments associated with the current doctor
+    doctorAppointments = appointments
+        .where((appointment) =>
+            appointment.aDoctorName == widget.currentDoctor.name)
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -258,9 +264,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               const SizedBox(height: 20),
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: appointments.length,
+                itemCount: doctorAppointments.length,
                 itemBuilder: (context, index) {
-                  return AppointmentCard(appointmentData: appointments[index]);
+                  return AppointmentCard(
+                      appointmentData: doctorAppointments[index]);
                 },
               ),
             ],
@@ -272,7 +279,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 }
 
 class AppointmentCard extends StatelessWidget {
-  final Map<String, String> appointmentData;
+  final Apppointments appointmentData;
 
   const AppointmentCard({required this.appointmentData});
 
@@ -287,17 +294,17 @@ class AppointmentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Date: ${appointmentData['date']}',
+              'Date: ${appointmentData.aDate}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
-            Text('Time: ${appointmentData['time']}'),
+            Text('Time: ${appointmentData.time}'),
             const SizedBox(height: 8),
-            Text('Doctor: ${appointmentData['doctor']}'),
+            Text('Patient: ${appointmentData.aPatientName}'),
             const SizedBox(height: 8),
-            Text('Reason: ${appointmentData['reason']}'),
+            Text('Reason: ${appointmentData.reason}'),
           ],
         ),
       ),
