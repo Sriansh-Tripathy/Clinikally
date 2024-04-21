@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:onboard_animation/components/doctor_signUp.dart';
 import 'package:onboard_animation/components/landed_content.dart';
+import 'package:onboard_animation/components/patientSignUp.dart';
 import 'package:onboard_animation/components/sing_up_form.dart';
 
 class OnboardContent extends StatefulWidget {
@@ -12,6 +14,7 @@ class OnboardContent extends StatefulWidget {
 class _OnboardContentState extends State<OnboardContent> {
   late PageController _pageController;
   // double _progress;
+  var _currentPage = 0;
   @override
   void initState() {
     _pageController = PageController()
@@ -19,6 +22,36 @@ class _OnboardContentState extends State<OnboardContent> {
         setState(() {});
       });
     super.initState();
+  }
+
+  Widget callText() {
+    switch (_currentPage) {
+      case 0:
+        return const Text('Get Started'); // Width for page 1
+      case 1:
+        return const Text(
+          "Create account",
+          maxLines: 1,
+          overflow: TextOverflow.fade,
+          softWrap: false,
+        ); // Width for page 2
+      case 2:
+        return const Text(
+          "Are you a faculty?",
+          maxLines: 1,
+          overflow: TextOverflow.fade,
+          softWrap: false,
+        ); // Width for page 3
+      case 3:
+        return const Text(
+          "Are you a student?",
+          maxLines: 1,
+          overflow: TextOverflow.fade,
+          softWrap: false,
+        ); // Width for page 4
+      default:
+        return const Text('overflow'); // Default width
+    }
   }
 
   @override
@@ -40,6 +73,8 @@ class _OnboardContentState extends State<OnboardContent> {
                   children: [
                     LandingContent(),
                     SignUpForm(),
+                    DoctorSignUp(),
+                    PatientSignUp(),
                   ],
                 ),
               ),
@@ -47,12 +82,16 @@ class _OnboardContentState extends State<OnboardContent> {
           ),
           Positioned(
             height: 56,
-            bottom: 48 + progress * 180,
+            bottom: 48,
             right: 16,
             child: GestureDetector(
               onTap: () {
-                if (_pageController.page == 0) {
-                  _pageController.animateToPage(1,
+                if (_pageController.page != 3) {
+                  _pageController.animateToPage(++_currentPage,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.ease);
+                } else {
+                  _pageController.animateToPage(--_currentPage,
                       duration: const Duration(milliseconds: 400),
                       curve: Curves.ease);
                 }
@@ -86,17 +125,23 @@ class _OnboardContentState extends State<OnboardContent> {
                           fit: StackFit.passthrough,
                           children: [
                             FadeTransition(
-                              opacity: AlwaysStoppedAnimation(1 - progress),
-                              child: const Text("Get Started"),
+                              opacity: AlwaysStoppedAnimation(
+                                  progress < 0.33 ? 1 : 0),
+                              child: callText(),
                             ),
                             FadeTransition(
-                              opacity: AlwaysStoppedAnimation(progress),
-                              child: const Text(
-                                "Create account",
-                                maxLines: 1,
-                                overflow: TextOverflow.fade,
-                                softWrap: false,
-                              ),
+                                opacity: AlwaysStoppedAnimation(
+                                    progress > 0.33 && progress < 0.67 ? 1 : 0),
+                                child: callText()),
+                            FadeTransition(
+                              opacity: AlwaysStoppedAnimation(
+                                  progress > 0.67 && progress < 0.99 ? 1 : 0),
+                              child: callText(),
+                            ),
+                            FadeTransition(
+                              opacity: AlwaysStoppedAnimation(
+                                  progress >= 0.99 ? 1 : 0),
+                              child: callText(),
                             ),
                           ],
                         ),

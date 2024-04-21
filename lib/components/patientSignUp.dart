@@ -4,10 +4,13 @@ import 'package:onboard_animation/paitent_profile.dart';
 import 'package:onboard_animation/dummy_data.dart';
 import 'package:onboard_animation/modals.dart';
 
-class SignUpForm extends StatelessWidget {
-  SignUpForm({Key? key}) : super(key: key);
+class PatientSignUp extends StatelessWidget {
+  PatientSignUp({Key? key}) : super(key: key);
   final _nameEtc = TextEditingController();
-  final _passwordEtc = TextEditingController();
+  final _adhaarIdEtc = TextEditingController();
+  final _ageEtc = TextEditingController();
+  final _bloodGrpEtc = TextEditingController();
+  final _addressEtc = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,7 @@ class SignUpForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Sign In",
+              "Create an Patient account",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 26,
@@ -47,9 +50,57 @@ class SignUpForm extends StatelessWidget {
                   const SizedBox(height: 24),
                   TextFormField(
                     obscureText: true,
-                    controller: _passwordEtc,
+                    controller: _adhaarIdEtc,
                     decoration: InputDecoration(
-                      hintText: "Password",
+                      hintText: "AdhaarId",
+                      hintStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.lock,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    obscureText: true,
+                    controller: _ageEtc,
+                    decoration: InputDecoration(
+                      hintText: "Age",
+                      hintStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.lock,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    obscureText: true,
+                    controller: _bloodGrpEtc,
+                    decoration: InputDecoration(
+                      hintText: "Blood Group",
+                      hintStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.lock,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    obscureText: true,
+                    controller: _addressEtc,
+                    decoration: InputDecoration(
+                      hintText: "Address",
                       hintStyle: const TextStyle(
                         fontWeight: FontWeight.normal,
                         color: Colors.grey,
@@ -69,44 +120,30 @@ class SignUpForm extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   // Retrieve name and password from form fields
-                  String name = _nameEtc.text;
-                  String password = _passwordEtc.text;
-                  Doctors? currentDoctor = registerDoctors.firstWhere(
-                    (doctors) => doctors.name == name,
-                    orElse: () => const Doctors(
-                      name: '',
-                      field: '',
-                      doctorId: '',
-                      password: '',
-                      availability: '',
-                    ),
-                  );
-                  Patients? currentPatient = registeredPatients.firstWhere(
-                      (patient) => patient.name == name,
-                      orElse: () => const Patients(
-                          adhaarId: '',
-                          address: '',
-                          age: '',
-                          bloodGrp: '',
-                          name: ''));
+                  String _name = _nameEtc.text;
+                  String _adhaarId = _adhaarIdEtc.text;
+                  String _age = _ageEtc.text;
+                  String bloodGrp = _bloodGrpEtc.text;
+                  String _address = _addressEtc.text;
+                  Patients newPatient = Patients(
+                      name: _name,
+                      age: _age,
+                      bloodGrp: bloodGrp,
+                      adhaarId: _adhaarId,
+                      address: _address);
+
                   // Check if a doctor with the entered name and password exists
-                  if (currentDoctor.name != '' &&
-                      currentDoctor.password == password) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DoctorProfileScreen(
-                          currentDoctor: currentDoctor,
-                        ),
-                      ),
-                    );
-                  } else if (currentPatient.name != '' &&
-                      currentPatient.adhaarId == password) {
+                  if (_name != '' &&
+                      _adhaarId != '' &&
+                      _age != '' &&
+                      bloodGrp != '' &&
+                      _address != '') {
+                    registeredPatients.add(newPatient);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => PatientProfileScreen(
-                          currentPatient: currentPatient,
+                          currentPatient: newPatient,
                         ),
                       ),
                     );
@@ -135,6 +172,12 @@ class SignUpForm extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
+            Center(
+              child: Text(
+                "Already have an account? Sign in.",
+                style: TextStyle(fontSize: 16, color: Colors.blueGrey.shade300),
+              ),
+            )
           ],
         ),
       ),

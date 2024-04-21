@@ -4,10 +4,13 @@ import 'package:onboard_animation/paitent_profile.dart';
 import 'package:onboard_animation/dummy_data.dart';
 import 'package:onboard_animation/modals.dart';
 
-class SignUpForm extends StatelessWidget {
-  SignUpForm({Key? key}) : super(key: key);
+class DoctorSignUp extends StatelessWidget {
+  DoctorSignUp({Key? key}) : super(key: key);
   final _nameEtc = TextEditingController();
   final _passwordEtc = TextEditingController();
+  final _fieldEtc = TextEditingController();
+  final _doctorIdEtc = TextEditingController();
+  final _avaialbilityEtc = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,7 @@ class SignUpForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Sign In",
+              "Create an account",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 26,
@@ -60,6 +63,54 @@ class SignUpForm extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    obscureText: true,
+                    controller: _fieldEtc,
+                    decoration: InputDecoration(
+                      hintText: "Field",
+                      hintStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.lock,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    obscureText: true,
+                    controller: _doctorIdEtc,
+                    decoration: InputDecoration(
+                      hintText: "DoctorId",
+                      hintStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.lock,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    obscureText: true,
+                    controller: _avaialbilityEtc,
+                    decoration: InputDecoration(
+                      hintText: "Availability",
+                      hintStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.lock,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -69,44 +120,30 @@ class SignUpForm extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   // Retrieve name and password from form fields
-                  String name = _nameEtc.text;
-                  String password = _passwordEtc.text;
-                  Doctors? currentDoctor = registerDoctors.firstWhere(
-                    (doctors) => doctors.name == name,
-                    orElse: () => const Doctors(
-                      name: '',
-                      field: '',
-                      doctorId: '',
-                      password: '',
-                      availability: '',
-                    ),
-                  );
-                  Patients? currentPatient = registeredPatients.firstWhere(
-                      (patient) => patient.name == name,
-                      orElse: () => const Patients(
-                          adhaarId: '',
-                          address: '',
-                          age: '',
-                          bloodGrp: '',
-                          name: ''));
+                  String _name = _nameEtc.text;
+                  String _password = _passwordEtc.text;
+                  String _field = _fieldEtc.text;
+                  String _doctorId = _doctorIdEtc.text;
+                  String _availability = _avaialbilityEtc.text;
+                  Doctors newDoctor = Doctors(
+                      name: _name,
+                      field: _field,
+                      doctorId: _doctorId,
+                      password: _password,
+                      availability: _availability);
+
                   // Check if a doctor with the entered name and password exists
-                  if (currentDoctor.name != '' &&
-                      currentDoctor.password == password) {
+                  if (_name != '' &&
+                      _password != '' &&
+                      _field != '' &&
+                      _doctorId != '' &&
+                      _availability != '') {
+                    registerDoctors.add(newDoctor);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => DoctorProfileScreen(
-                          currentDoctor: currentDoctor,
-                        ),
-                      ),
-                    );
-                  } else if (currentPatient.name != '' &&
-                      currentPatient.adhaarId == password) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PatientProfileScreen(
-                          currentPatient: currentPatient,
+                          currentDoctor: newDoctor,
                         ),
                       ),
                     );
@@ -135,6 +172,12 @@ class SignUpForm extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
+            Center(
+              child: Text(
+                "Already have an account? Sign in.",
+                style: TextStyle(fontSize: 16, color: Colors.blueGrey.shade300),
+              ),
+            )
           ],
         ),
       ),

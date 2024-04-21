@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:onboard_animation/modals.dart';
+import 'package:onboard_animation/dummy_data.dart';
 
 class PatientProfileScreen extends StatefulWidget {
   const PatientProfileScreen({required this.currentPatient});
@@ -31,9 +32,15 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
         controller: _pageController,
         onPageChanged: _onPageChanged,
         children: <Widget>[
-          PatientProfilePage(),
-          PatientDoctorsPage(),
-          PatientPrescriptionsPage(),
+          PatientProfilePage(
+            currentPatient: widget.currentPatient,
+          ),
+          PatientDoctorsPage(
+            currentPatient: widget.currentPatient,
+          ),
+          PatientPrescriptionsPage(
+            currentPatient: widget.currentPatient,
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavBar(
@@ -101,6 +108,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
 }
 
 class PatientProfilePage extends StatefulWidget {
+  const PatientProfilePage({required this.currentPatient});
+  final Patients currentPatient;
   @override
   _PatientProfilePageState createState() => _PatientProfilePageState();
 }
@@ -124,17 +133,16 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
               ),
             ),
             const SizedBox(height: 20),
-            itemProfile('Name', 'John Doe', Icons.person),
+            itemProfile('Name', widget.currentPatient.name, Icons.person),
             const SizedBox(height: 10),
-            itemProfile('Phone', '+1234567890', Icons.phone),
+            itemProfile('Age', widget.currentPatient.age, Icons.person),
             const SizedBox(height: 10),
             itemProfile(
-                'Technical Language', 'Dart, Flutter', Icons.location_city),
+                'Address', widget.currentPatient.address, Icons.location_city),
             const SizedBox(height: 10),
-            itemProfile('Email', 'john.doe@example.com', Icons.mail),
-            const SizedBox(height: 20),
-            itemProfile('LinkedIn', 'john_doe_linkedin', Icons.data_array),
-            const SizedBox(height: 20),
+            itemProfile('Blood Group', widget.currentPatient.bloodGrp,
+                Icons.local_hospital),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () async {
                 // Navigate to edit profile screen
@@ -149,6 +157,8 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
 }
 
 class PatientDoctorsPage extends StatefulWidget {
+  const PatientDoctorsPage({required this.currentPatient});
+  final Patients currentPatient;
   @override
   _PatientDoctorsPageState createState() => _PatientDoctorsPageState();
 }
@@ -161,21 +171,34 @@ class _PatientDoctorsPageState extends State<PatientDoctorsPage> {
         crossAxisCount: 2,
         childAspectRatio: 1.0,
       ),
-      itemCount: doctors.length,
+      itemCount: registerDoctors.length,
       itemBuilder: (context, index) {
-        return DoctorCard(doctor: doctors[index]);
+        return DoctorCard(doctor: registerDoctors[index]);
       },
     );
   }
 }
 
 class PatientPrescriptionsPage extends StatefulWidget {
+  const PatientPrescriptionsPage({required this.currentPatient});
+  final Patients currentPatient;
   @override
   _PatientPrescriptionsPageState createState() =>
       _PatientPrescriptionsPageState();
 }
 
 class _PatientPrescriptionsPageState extends State<PatientPrescriptionsPage> {
+  late List<Prescription> patientPrescriptions;
+
+  @override
+  void initState() {
+    super.initState();
+    patientPrescriptions = prescriptions
+        .where((prescription) =>
+            prescription.pPatientName == widget.currentPatient.name)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,28 +206,14 @@ class _PatientPrescriptionsPageState extends State<PatientPrescriptionsPage> {
         title: Text('Patient Prescriptions'),
       ),
       body: ListView.builder(
-        itemCount: prescriptions.length,
+        itemCount: patientPrescriptions.length,
         itemBuilder: (context, index) {
-          return PrescriptionCard(prescription: prescriptions[index]);
+          return PrescriptionCard(prescription: patientPrescriptions[index]);
         },
       ),
     );
   }
 }
-
-List<Prescription> prescriptions = [
-  Prescription(
-      date: '2024-04-20',
-      doctor: 'Dr. Smith',
-      medication: 'Medicine A',
-      dosage: '1 tablet, once daily'),
-  Prescription(
-      date: '2024-05-15',
-      doctor: 'Dr. Johnson',
-      medication: 'Medicine B',
-      dosage: '2 tablets, twice daily'),
-  // Add more prescriptions as needed
-];
 
 class PrescriptionCard extends StatelessWidget {
   final Prescription prescription;
@@ -222,15 +231,15 @@ class PrescriptionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Date: ${prescription.date}',
-              style: TextStyle(
+              '${prescription.pDoctorName}',
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 8),
-            Text('Doctor: ${prescription.doctor}'),
-            SizedBox(height: 8),
             Text('Medication: ${prescription.medication}'),
+            SizedBox(height: 8),
+            Text('Dosage: ${prescription.dosage}'),
             SizedBox(height: 8),
             Text('Dosage: ${prescription.dosage}'),
           ],
@@ -238,20 +247,6 @@ class PrescriptionCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class Prescription {
-  final String date;
-  final String doctor;
-  final String medication;
-  final String dosage;
-
-  Prescription({
-    required this.date,
-    required this.doctor,
-    required this.medication,
-    required this.dosage,
-  });
 }
 
 Widget itemProfile(String title, String subtitle, IconData iconData) {
@@ -279,7 +274,7 @@ Widget itemProfile(String title, String subtitle, IconData iconData) {
 }
 
 class DoctorCard extends StatelessWidget {
-  final Doctor doctor;
+  final Doctors doctor;
 
   const DoctorCard({required this.doctor});
 
@@ -302,7 +297,7 @@ class DoctorCard extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              doctor.specialization,
+              doctor.field, // Changed 'doctors' to 'doctor'
               style: TextStyle(
                 fontStyle: FontStyle.italic,
               ),
@@ -314,6 +309,7 @@ class DoctorCard extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
+            ElevatedButton(onPressed: onPressed, child:const Text('book Appointment'),)
           ],
         ),
       ),
@@ -332,31 +328,3 @@ class Doctor {
     required this.availability,
   });
 }
-
-List<Doctor> doctors = [
-  Doctor(
-    name: 'Dr. John Doe',
-    specialization: 'Cardiologist',
-    availability: 'Mon - Fri, 9:00 AM - 5:00 PM',
-  ),
-  Doctor(
-    name: 'Dr. Jane Smith',
-    specialization: 'Pediatrician',
-    availability: 'Mon - Sat, 8:00 AM - 6:00 PM',
-  ),
-  Doctor(
-    name: 'Dr. Michael Johnson',
-    specialization: 'Dermatologist',
-    availability: 'Tue - Fri, 10:00 AM - 4:00 PM',
-  ),
-  Doctor(
-    name: 'Dr. Emily Williams',
-    specialization: 'Orthopedic Surgeon',
-    availability: 'Mon - Thu, 9:00 AM - 3:00 PM',
-  ),
-  Doctor(
-    name: 'Dr. David Brown',
-    specialization: 'Neurologist',
-    availability: 'Wed - Sat, 10:00 AM - 5:00 PM',
-  ),
-];
