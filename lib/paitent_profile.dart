@@ -278,6 +278,109 @@ class DoctorCard extends StatelessWidget {
 
   const DoctorCard({required this.doctor});
 
+  Future<void> bookAppointment(BuildContext context) async {
+    DateTime? selectedDate;
+    TimeOfDay? selectedTime;
+
+    // Show a dialog with date and time pickers
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Date and Time'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Date picker
+              ListTile(
+                title: Text('Date:'),
+                trailing: OutlinedButton(
+                  onPressed: () async {
+                    selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                    );
+                  },
+                  child: Text(selectedDate?.toString() ?? 'Select Date'),
+                ),
+              ),
+              // Time picker
+              ListTile(
+                title: Text('Time:'),
+                trailing: OutlinedButton(
+                  onPressed: () async {
+                    selectedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                  },
+                  child: Text(selectedTime?.toString() ?? 'Select Time'),
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Check if both date and time are selected
+                if (selectedDate != null && selectedTime != null) {
+                  // Generate a new appointment with selected date and time
+                  final newAppointment = Apppointments(
+                    aDate:
+                        '${selectedDate?.day}-${selectedDate?.month}-${selectedDate?.year}',
+                    aDoctorName: doctor.name,
+                    reason: 'Regular Checkup',
+                    time: selectedTime?.format(context) ?? '',
+                    aPatientName: 'Patient Name',
+                  );
+
+                  // Add the new appointment to the appointments list
+                  appointments.add(newAppointment);
+
+                  // Show a confirmation dialog
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Appointment Booked'),
+                        content: Text('Your appointment has been booked.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  // Show an error message if date or time is not selected
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please select both date and time.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              child: Text('Book Appointment'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -297,7 +400,7 @@ class DoctorCard extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              doctor.field, // Changed 'doctors' to 'doctor'
+              doctor.field,
               style: TextStyle(
                 fontStyle: FontStyle.italic,
               ),
@@ -309,22 +412,13 @@ class DoctorCard extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
-            ElevatedButton(onPressed: onPressed, child:const Text('book Appointment'),)
+            ElevatedButton(
+              onPressed: () => bookAppointment(context),
+              child: const Text('Book Appointment'),
+            )
           ],
         ),
       ),
     );
   }
-}
-
-class Doctor {
-  final String name;
-  final String specialization;
-  final String availability;
-
-  Doctor({
-    required this.name,
-    required this.specialization,
-    required this.availability,
-  });
 }

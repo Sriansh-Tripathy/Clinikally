@@ -267,7 +267,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 itemCount: doctorAppointments.length,
                 itemBuilder: (context, index) {
                   return AppointmentCard(
-                      appointmentData: doctorAppointments[index]);
+                    appointmentData: doctorAppointments[index],
+                    currentdoctor: widget.currentDoctor,
+                  );
                 },
               ),
             ],
@@ -280,32 +282,126 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
 class AppointmentCard extends StatelessWidget {
   final Apppointments appointmentData;
+  final Doctors currentdoctor;
 
-  const AppointmentCard({required this.appointmentData});
+  const AppointmentCard(
+      {required this.appointmentData, required this.currentdoctor});
+
+  Future<void> _showEditDialog(BuildContext context) async {
+    TextEditingController medicationController = TextEditingController();
+    TextEditingController dosageController = TextEditingController();
+    TextEditingController complicationsController = TextEditingController();
+    TextEditingController remarksController = TextEditingController();
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit Appointment Details'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: medicationController,
+                  decoration: InputDecoration(labelText: 'Medication'),
+                ),
+                TextFormField(
+                  controller: dosageController,
+                  decoration: InputDecoration(labelText: 'Dosage'),
+                ),
+                TextFormField(
+                  controller: complicationsController,
+                  decoration: InputDecoration(labelText: 'Complications'),
+                ),
+                TextFormField(
+                  controller: remarksController,
+                  decoration: InputDecoration(labelText: 'Remarks'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Here you can use the entered data from controllers
+                String medication = medicationController.text;
+                String dosage = dosageController.text;
+                String complications = complicationsController.text;
+                String remarks = remarksController.text;
+
+                Patients? _currentPatient = registeredPatients.firstWhere(
+                    (patient) => patient.name == appointmentData.aPatientName);
+
+                Reports newReport = Reports(
+                    age: _currentPatient.age,
+                    complications: complications,
+                    name: _currentPatient.name,
+                    rBloodGrp: _currentPatient.bloodGrp,
+                    remarks: remarks,
+                    rDoctorName: currentdoctor.name);
+
+                Prescription newPrescription = Prescription(
+                    pDate: appointmentData.aDate,
+                    pDoctorName: currentdoctor.name,
+                    dosage: dosage,
+                    medication: medication,
+                    pPatientName: _currentPatient.name);
+
+                prescriptions.add(newPrescription);
+                reports.add(newReport);
+                // Perform actions with the entered data, such as updating the appointment details
+                // For demonstration purposes, print the entered data
+                print('Medication: $medication');
+                print('Dosage: $dosage');
+                print('Complications: $complications');
+                print('Remarks: $remarks');
+
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Date: ${appointmentData.aDate}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {
+        _showEditDialog(context);
+      },
+      child: Card(
+        elevation: 4,
+        margin: EdgeInsets.symmetric(vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Date: ${appointmentData.aDate}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text('Time: ${appointmentData.time}'),
-            const SizedBox(height: 8),
-            Text('Patient: ${appointmentData.aPatientName}'),
-            const SizedBox(height: 8),
-            Text('Reason: ${appointmentData.reason}'),
-          ],
+              const SizedBox(height: 8),
+              Text('Time: ${appointmentData.time}'),
+              const SizedBox(height: 8),
+              Text('Patient: ${appointmentData.aPatientName}'),
+              const SizedBox(height: 8),
+              Text('Reason: ${appointmentData.reason}'),
+            ],
+          ),
         ),
       ),
     );
