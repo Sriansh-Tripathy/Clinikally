@@ -37,14 +37,14 @@ class _OnboardContentState extends State<OnboardContent> {
         ); // Width for page 2
       case 2:
         return const Text(
-          "Are you a faculty?",
+          "Are you a Patient?",
           maxLines: 1,
           overflow: TextOverflow.fade,
           softWrap: false,
         ); // Width for page 3
       case 3:
         return const Text(
-          "Are you a student?",
+          "Are you a Doctor?",
           maxLines: 1,
           overflow: TextOverflow.fade,
           softWrap: false,
@@ -60,7 +60,7 @@ class _OnboardContentState extends State<OnboardContent> {
         _pageController.hasClients ? (_pageController.page ?? 0) : 0;
 
     return SizedBox(
-      height: 400 + progress * 160,
+      height: 400 + progress * 140,
       child: Stack(
         fit: StackFit.expand,
         children: [

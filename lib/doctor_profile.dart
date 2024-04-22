@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:onboard_animation/modals.dart';
 import 'package:onboard_animation/dummy_data.dart';
 
@@ -262,15 +263,17 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: doctorAppointments.length,
-                itemBuilder: (context, index) {
-                  return AppointmentCard(
-                    appointmentData: doctorAppointments[index],
-                    currentdoctor: widget.currentDoctor,
-                  );
-                },
+              SingleChildScrollView(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: doctorAppointments.length,
+                  itemBuilder: (context, index) {
+                    return AppointmentCard(
+                      appointmentData: doctorAppointments[index],
+                      currentdoctor: widget.currentDoctor,
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -357,6 +360,7 @@ class AppointmentCard extends StatelessWidget {
 
                 prescriptions.add(newPrescription);
                 reports.add(newReport);
+                appointments.remove(appointmentData);
                 // Perform actions with the entered data, such as updating the appointment details
                 // For demonstration purposes, print the entered data
                 print('Medication: $medication');
@@ -445,10 +449,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               itemProfile('Doctor Id', widget.currentDoctor.doctorId,
                   Icons.assignment_ind),
               const SizedBox(height: 10),
-              itemProfile('Technical Language', widget.currentDoctor.field,
+              itemProfile('Specialization', widget.currentDoctor.field,
                   Icons.drive_file_rename_outline_sharp),
               const SizedBox(height: 10),
-              itemProfile('Email', widget.currentDoctor.availability,
+              itemProfile('Availability', widget.currentDoctor.availability,
                   Icons.timelapse_sharp),
               const SizedBox(height: 20),
               ElevatedButton(

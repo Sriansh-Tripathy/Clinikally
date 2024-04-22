@@ -21,7 +21,7 @@ class DoctorSignUp extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Create an account",
+              "Create an Doctor's account",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 26,
@@ -65,7 +65,7 @@ class DoctorSignUp extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
-                    obscureText: true,
+                    obscureText: false,
                     controller: _fieldEtc,
                     decoration: InputDecoration(
                       hintText: "Field",
@@ -74,14 +74,14 @@ class DoctorSignUp extends StatelessWidget {
                         color: Colors.grey,
                       ),
                       suffixIcon: Icon(
-                        Icons.lock,
+                        Icons.wysiwyg_outlined,
                         color: Colors.grey.shade400,
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
-                    obscureText: true,
+                    obscureText: false,
                     controller: _doctorIdEtc,
                     decoration: InputDecoration(
                       hintText: "DoctorId",
@@ -90,14 +90,14 @@ class DoctorSignUp extends StatelessWidget {
                         color: Colors.grey,
                       ),
                       suffixIcon: Icon(
-                        Icons.lock,
+                        Icons.web_sharp,
                         color: Colors.grey.shade400,
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
-                    obscureText: true,
+                    obscureText: false,
                     controller: _avaialbilityEtc,
                     decoration: InputDecoration(
                       hintText: "Availability",
@@ -106,7 +106,7 @@ class DoctorSignUp extends StatelessWidget {
                         color: Colors.grey,
                       ),
                       suffixIcon: Icon(
-                        Icons.lock,
+                        Icons.timelapse_sharp,
                         color: Colors.grey.shade400,
                       ),
                     ),

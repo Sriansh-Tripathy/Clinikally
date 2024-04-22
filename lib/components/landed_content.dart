@@ -12,7 +12,7 @@ class LandingContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Find local \ncommunity events",
+            "Clini-kally",
             style: Theme.of(context)
                 .textTheme
                 .headlineLarge!
@@ -22,7 +22,7 @@ class LandingContent extends StatelessWidget {
             height: 16,
           ),
           Text(
-            "Get involved with what's happening near you.",
+            "Book Hassle Free Appointments with Specialized Doctors .",
             style: TextStyle(fontSize: 24, color: Colors.blueGrey.shade300),
           ),
         ],

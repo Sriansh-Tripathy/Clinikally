@@ -241,7 +241,7 @@ class PrescriptionCard extends StatelessWidget {
             SizedBox(height: 8),
             Text('Dosage: ${prescription.dosage}'),
             SizedBox(height: 8),
-            Text('Dosage: ${prescription.dosage}'),
+            Text('Date: ${prescription.pDate}'),
           ],
         ),
       ),

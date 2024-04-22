@@ -21,7 +21,7 @@ class PatientSignUp extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Create an Patient account",
+              "Create an Patient's account",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 26,
@@ -49,7 +49,7 @@ class PatientSignUp extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
-                    obscureText: true,
+                    obscureText: false,
                     controller: _adhaarIdEtc,
                     decoration: InputDecoration(
                       hintText: "AdhaarId",
@@ -58,14 +58,14 @@ class PatientSignUp extends StatelessWidget {
                         color: Colors.grey,
                       ),
                       suffixIcon: Icon(
-                        Icons.lock,
+                        Icons.workspace_premium_sharp,
                         color: Colors.grey.shade400,
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
-                    obscureText: true,
+                    obscureText: false,
                     controller: _ageEtc,
                     decoration: InputDecoration(
                       hintText: "Age",
@@ -74,14 +74,14 @@ class PatientSignUp extends StatelessWidget {
                         color: Colors.grey,
                       ),
                       suffixIcon: Icon(
-                        Icons.lock,
+                        Icons.man_outlined,
                         color: Colors.grey.shade400,
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
-                    obscureText: true,
+                    obscureText: false,
                     controller: _bloodGrpEtc,
                     decoration: InputDecoration(
                       hintText: "Blood Group",
@@ -90,14 +90,14 @@ class PatientSignUp extends StatelessWidget {
                         color: Colors.grey,
                       ),
                       suffixIcon: Icon(
-                        Icons.lock,
+                        Icons.water_drop_sharp,
                         color: Colors.grey.shade400,
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
-                    obscureText: true,
+                    obscureText: false,
                     controller: _addressEtc,
                     decoration: InputDecoration(
                       hintText: "Address",
@@ -106,7 +106,7 @@ class PatientSignUp extends StatelessWidget {
                         color: Colors.grey,
                       ),
                       suffixIcon: Icon(
-                        Icons.lock,
+                        Icons.location_on_sharp,
                         color: Colors.grey.shade400,
                       ),
                     ),

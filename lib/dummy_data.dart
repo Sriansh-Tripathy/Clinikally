@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 var registerDoctors = [
   const Doctors(
       name: "Deepak Kumar Tripathy",
-      field: "Gynacologist",
+      field: "Obestrics and Gynacologist",
       doctorId: "12345",
       password: "iamdeepak",
       availability: "mon - sat 9am to 12pm and 4pm to 7pm"),
